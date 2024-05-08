@@ -13,7 +13,7 @@ import java.util.Set;
 public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "role_code")
     private String roleCode;

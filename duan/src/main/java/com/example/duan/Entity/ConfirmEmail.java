@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class ConfirmEmail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "confirm_code")
     private String confirmCode;

@@ -13,9 +13,10 @@ import java.util.Set;
 @Table(name = "practice")
 @Data
 public class Practice implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "practice_code")
     private String practiceCode;

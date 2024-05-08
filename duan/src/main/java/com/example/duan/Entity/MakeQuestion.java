@@ -14,7 +14,7 @@ import java.util.Set;
 public class MakeQuestion implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "question")
     private String question;

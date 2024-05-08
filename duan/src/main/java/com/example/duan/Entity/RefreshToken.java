@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class RefreshToken implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "token")
     private String token;

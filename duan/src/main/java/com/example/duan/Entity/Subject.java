@@ -28,11 +28,11 @@ public class Subject implements Serializable {
     @JsonIgnore
     private Set<SubjectDetail> subjectDetails;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "currentSubject")
     @JsonIgnore
     private Set<LearningProgress> learningProgresses;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "currentSubject")
     @JsonIgnore
     private Set<RegisterStudy> registerStudies;
 

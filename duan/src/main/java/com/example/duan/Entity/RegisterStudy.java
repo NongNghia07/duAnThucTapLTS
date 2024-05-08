@@ -13,7 +13,7 @@ import java.util.Set;
 public class RegisterStudy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "is_finished")
     private  boolean isFinished = false;

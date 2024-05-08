@@ -10,7 +10,7 @@ import lombok.Data;
 public class RunTestCase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "result")
     private String result;

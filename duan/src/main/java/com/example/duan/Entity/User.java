@@ -16,7 +16,7 @@ import java.util.Set;
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "username")
     private String userName;
@@ -71,6 +71,7 @@ public class User implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "certificate_id")
+    @JsonIgnore
     private Certificate certificate;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
@@ -101,7 +102,7 @@ public class User implements Serializable {
     @JsonIgnore
     private Set<RegisterStudy> registerStudies;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
     @JsonIgnore
     private Set<Blog> blogs;
 

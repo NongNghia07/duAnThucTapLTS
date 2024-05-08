@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class Bill implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "trading_code")
     private String tradingCode;

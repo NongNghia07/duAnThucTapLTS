@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class CommentBlog implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "content")
     private String content;

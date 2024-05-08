@@ -13,7 +13,7 @@ import java.util.Set;
 public class TestCase implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "input")
     private String input;

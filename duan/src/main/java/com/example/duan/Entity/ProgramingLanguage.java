@@ -13,7 +13,7 @@ import java.util.Set;
 public class ProgramingLanguage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name = "language_name")
     private String languageName;

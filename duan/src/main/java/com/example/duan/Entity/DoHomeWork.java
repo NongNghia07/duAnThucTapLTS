@@ -15,7 +15,7 @@ import java.util.Set;
 public class DoHomeWork implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Enumerated(EnumType.STRING)
     private HomeWorkStatus homeWorkStatus;
