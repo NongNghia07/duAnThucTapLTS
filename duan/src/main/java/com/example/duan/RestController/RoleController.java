@@ -37,4 +37,14 @@ public class RoleController {
     public void deleteRole(@RequestParam Long id) {
         roleService.deleteRole(id);
     }
+
+    @PostMapping("/{roleId}/permissions/{permissionId}")
+    public Role assignPermissionToRole(@PathVariable Long roleId, @PathVariable Long permissionId) {
+        return roleService.assignPermissionToRole(roleId, permissionId);
+    }
+
+    @DeleteMapping("/{roleId}/permissions/{permissionId}")
+    public Role revokePermissionFromRole(@PathVariable Long roleId, @PathVariable Long permissionId) {
+        return roleService.revokePermissionFromRole(roleId, permissionId);
+    }
 }
