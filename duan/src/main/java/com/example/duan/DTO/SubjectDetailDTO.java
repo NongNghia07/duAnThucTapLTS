@@ -9,8 +9,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CourseSubjectDTO {
+public class SubjectDetailDTO {
     private int id;
-    private CourseDTO course;
+    private String name;
+    private boolean isFinished = false;
+    private boolean isActive = false;
+    private String linkVideo;
     private SubjectDTO subject;
 }

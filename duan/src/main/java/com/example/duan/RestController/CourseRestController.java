@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/course")
+@RequestMapping("/api/v1/course")
 @CrossOrigin("*")
 public class CourseRestController {
     private final CourseService courseService;
@@ -19,16 +19,16 @@ public class CourseRestController {
         this.courseService = courseService;
     }
 
-    @GetMapping("findAll")
-    public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(courseService.findAll());
+    @GetMapping("getAll")
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(courseService.getAll());
     }
 
-    @GetMapping("findAll")
-    public ResponseEntity<?> findAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
+    @GetMapping("getPage")
+    public ResponseEntity<?> getAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                      @RequestParam(name = "size", defaultValue = "10") Integer size){
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(courseService.findAll(pageable));
+        return ResponseEntity.ok(courseService.getAll(pageable));
     }
 
     @PostMapping("create")
@@ -48,6 +48,6 @@ public class CourseRestController {
 
     @GetMapping("find/{id}")
     public ResponseEntity<?> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(courseService.findById(id));
+        return ResponseEntity.ok(courseService.getById(id));
     }
 }

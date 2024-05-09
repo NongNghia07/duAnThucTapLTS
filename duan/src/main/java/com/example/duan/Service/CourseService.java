@@ -7,10 +7,10 @@ import org.springframework.data.domain.Pageable;
 import java.util.Set;
 
 public interface CourseService {
-    Set<CourseDTO> findAll();
-    Page<CourseDTO> findAll(Pageable pageable);
+    Set<CourseDTO> getAll();
+    Page<CourseDTO> getAll(Pageable pageable);
     CourseDTO create(CourseDTO courseDTO);
     CourseDTO update(CourseDTO courseDTO);
     void delete(int id);
-    CourseDTO findById(int id);
+    CourseDTO getById(int id);
 }
