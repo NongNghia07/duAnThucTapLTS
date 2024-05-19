@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class RoleService {
+public class RoleService implements InterRole{
     @Autowired
     private RoleRepository roleRepository;
 
@@ -21,7 +21,7 @@ public class RoleService {
         return roleRepository.findAll();
     }
 
-    public Role getRoleById(Long id) {
+    public Role getRoleById(int id) {
         return roleRepository.findById(id).orElse(null);
     }
 
@@ -29,7 +29,7 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    public Role updateRole(Long id, Role roleDetails) {
+    public Role updateRole(int id, Role roleDetails) {
         Role role = roleRepository.findById(id).orElse(null);
         if (role != null) {
             role.setRoleCode(roleDetails.getRoleCode());
@@ -39,30 +39,8 @@ public class RoleService {
         return null;
     }
 
-    public void deleteRole(Long id) {
+    public void deleteRole(int id) {
         roleRepository.deleteById(id);
-    }
-
-    //Cap quyen
-    public Role assignPermissionToRole(Long roleId, Long permissionId) {
-        Role role = roleRepository.findById(roleId).orElse(null);
-        Permission permission = permissionRepository.findById(permissionId).orElse(null);
-        if (role != null && permission != null) {
-            role.getPermissions().add(permission);
-            return roleRepository.save(role);
-        }
-        return null;
-    }
-
-    //Thu hoi quyen
-    public Role revokePermissionFromRole(Long roleId, Long permissionId) {
-        Role role = roleRepository.findById(roleId).orElse(null);
-        Permission permission = permissionRepository.findById(permissionId).orElse(null);
-        if (role != null && permission != null) {
-            role.getPermissions().remove(permission);
-            return roleRepository.save(role);
-        }
-        return null;
     }
 
 }

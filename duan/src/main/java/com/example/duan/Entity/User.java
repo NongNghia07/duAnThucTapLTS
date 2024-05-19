@@ -125,4 +125,6 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
     private Set<Bill> bills;
+
+
 }

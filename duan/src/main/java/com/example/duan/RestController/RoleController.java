@@ -19,7 +19,7 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    public Role getRoleById(@PathVariable Long id) {
+    public Role getRoleById(@PathVariable int id) {
         return roleService.getRoleById(id);
     }
 
@@ -29,22 +29,13 @@ public class RoleController {
     }
 
     @PutMapping("/{id}")
-    public Role updateRole(@PathVariable Long id, @RequestBody Role roleDetails) {
+    public Role updateRole(@PathVariable int id, @RequestBody Role roleDetails) {
         return roleService.updateRole(id, roleDetails);
     }
 
     @DeleteMapping("/deleteRole")
-    public void deleteRole(@RequestParam Long id) {
+    public void deleteRole(@RequestParam int id) {
         roleService.deleteRole(id);
     }
 
-    @PostMapping("/{roleId}/permissions/{permissionId}")
-    public Role assignPermissionToRole(@PathVariable Long roleId, @PathVariable Long permissionId) {
-        return roleService.assignPermissionToRole(roleId, permissionId);
-    }
-
-    @DeleteMapping("/{roleId}/permissions/{permissionId}")
-    public Role revokePermissionFromRole(@PathVariable Long roleId, @PathVariable Long permissionId) {
-        return roleService.revokePermissionFromRole(roleId, permissionId);
-    }
 }

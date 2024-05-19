@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -26,5 +27,12 @@ public class ModelMapperConfig {
         return collection.stream()
                 .map(p -> modelMapper.map(p, myClass))
                 .collect(collector);
+    }
+
+    public static <S, T> List<T> mapCollection(Collection<S> source, Class<T> targetClass) {
+        ModelMapper modelMapper = new ModelMapper();
+        return source.stream()
+                .map(element -> modelMapper.map(element, targetClass))
+                .collect(Collectors.toList());
     }
 }

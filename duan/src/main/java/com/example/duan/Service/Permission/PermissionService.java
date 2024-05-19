@@ -1,22 +1,35 @@
 package com.example.duan.Service.Permission;
 
+import com.example.duan.Config.ModelMapperConfig;
+import com.example.duan.DTO.PermissionDTO;
 import com.example.duan.Entity.Permission;
+import com.example.duan.Entity.Role;
+import com.example.duan.Entity.User;
 import com.example.duan.Repository.PermissionRepository;
+import com.example.duan.Repository.RoleRepository;
+import com.example.duan.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class PermissionService {
+public class PermissionService implements InterPermission{
     @Autowired
     private PermissionRepository permissionRepository;
 
-    public List<Permission> getAllPermissions() {
-        return permissionRepository.findAll();
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<PermissionDTO> getAllPermissions() {
+        return (List<PermissionDTO>) ModelMapperConfig.mapCollection(permissionRepository.findAll(), PermissionDTO.class, Collectors.toList());
     }
 
-    public Permission getPermissionById(Long id) {
+    public Permission getPermissionById(int id) {
         return permissionRepository.findById(id).orElse(null);
     }
 
@@ -24,7 +37,16 @@ public class PermissionService {
         return permissionRepository.save(permission);
     }
 
-    public Permission updatePermission(Long id, Permission permissionDetails) {
+    public List<PermissionDTO> createAll(List<PermissionDTO> permissionDTOS) {
+        List<Permission> lst = ModelMapperConfig.mapCollection(permissionDTOS, Permission.class);
+        permissionRepository.saveAll(lst);
+        return ModelMapperConfig.mapCollection(lst, PermissionDTO.class);
+    }
+
+
+
+
+    public Permission updatePermission(int id, Permission permissionDetails) {
         Permission permission = permissionRepository.findById(id).orElse(null);
         if (permission != null) {
             permission.setUser(permissionDetails.getUser());
@@ -34,7 +56,9 @@ public class PermissionService {
         return null;
     }
 
-    public void deletePermission(Long id) {
+    public void deletePermission(int id) {
         permissionRepository.deleteById(id);
     }
+
+
 }

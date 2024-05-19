@@ -13,8 +13,8 @@ package com.example.duan.DTO;
 //@Getter
 //@Setter
 public class UserDTO {
-//    private long id;
-//
+    private int id;
+
 ////    @NotBlank(message = "userName can't be null")
 //    private String userName;
 //    private String password;
