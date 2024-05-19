@@ -2,8 +2,7 @@ package com.example.duan.Service.ServiceImpl;
 
 import com.example.duan.Config.ModelMapperConfig;
 import com.example.duan.DTO.CourseDTO;
-import com.example.duan.DTO.CourseSubjectDTO;
-import com.example.duan.DTO.SubjectDTO;
+import com.example.duan.DTO.UserDTO;
 import com.example.duan.Entity.Course;
 import com.example.duan.Exception.ApiRequestException;
 import com.example.duan.Repository.CourseRepository;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -51,33 +49,44 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseDTO create(CourseDTO courseDTO) {
-        try {
-            Course course = modelMapper.map(courseDTO, Course.class);
-            if(courseRepository.findByCode(courseDTO.getCode()).isPresent()){
-                throw new ApiRequestException("Course already exists");
-            }
-            // kiểm tra user tạo khóa học phải có quyền giảng viên thông qua chứng chỉ giảng viên ở bảng certificate
-            course.setCode(String.valueOf(randomCode()));
-            course.setNumberOfStudent(0);
-            course.setNumberOfPurchases(0);
-            courseRepository.save(course);
-            saveCourseSubjects(course.getId(), courseDTO);
-            return modelMapper.map(course, CourseDTO.class);
-        }catch (Exception e) {
-            throw new ApiRequestException(e.getMessage());
+        Course course = modelMapper.map(courseDTO, Course.class);
+        if(courseRepository.findByCode(courseDTO.getCode()).isPresent()){
+            throw new ApiRequestException("Course already exists");
         }
+
+        // kiểm tra user tạo khóa học phải có quyền giảng viên thông qua chứng chỉ giảng viên ở bảng certificate
+        course.setCode(String.valueOf(randomCode()));
+        course.setNumberOfStudent(0);
+        course.setNumberOfPurchases(0);
+
+        // Lưu khóa học mới vào bảng `courses`
+        courseRepository.save(course);
+
+        // Lưu tất cả các môn học vào bảng `course_subjects` của khóa học vừa tạo
+        saveCourseSubjects(course.getId(), courseDTO);
+
+        return modelMapper.map(course, CourseDTO.class);
     }
 
     @Override
     public CourseDTO update(CourseDTO courseDTO) {
-        try {
-            Course course = courseRepository.findById(courseDTO.getId()).orElseThrow(() -> new ApiRequestException("Course not found"));
-            courseRepository.save(course);
-            saveCourseSubjects(course.getId(), courseDTO);
-            return modelMapper.map(course, CourseDTO.class);
-        }catch (Exception e) {
-            throw new ApiRequestException(e.getMessage());
-        }
+        // Tìm kiếm khóa học
+        Course course = courseRepository.findById(courseDTO.getId()).orElseThrow(() -> new ApiRequestException("Course not found"));
+
+        // Update các trường của khóa học
+        course.setName(courseDTO.getName());
+        course.setIntroduce(courseDTO.getIntroduce());
+        course.setImageCourse(courseDTO.getImageCourse());
+        course.setPrice(course.getPrice());
+        course.setTotalCourseDuration(courseDTO.getTotalCourseDuration());
+
+        // Lưu khóa học
+        courseRepository.save(course);
+
+        // Lưu Môn học vào khóa học
+        saveCourseSubjects(course.getId(), courseDTO);
+
+        return modelMapper.map(course, CourseDTO.class);
     }
 
     @Override

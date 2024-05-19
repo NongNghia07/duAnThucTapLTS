@@ -10,5 +10,5 @@ public interface CourseSubjectService {
     Set<CourseSubjectDTO> getAll();
     CourseSubjectDTO getById(int id);
     Set<CourseSubjectDTO> saveAll(Set<CourseSubjectDTO> courseSubjectDTOs);
-    void deleteById(int id);
+    void deleteAll(Set<CourseSubjectDTO> courseSubjectDTOs);
 }

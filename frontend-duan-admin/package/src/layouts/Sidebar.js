@@ -10,6 +10,16 @@ const navigation = [
     icon: "bi bi-speedometer2",
   },
   {
+    title: "Môn học",
+    href: "/subject",
+    icon: "bi bi-file-text",
+  },
+  {
+    title: "Khóa học",
+    href: "/course",
+    icon: "bi bi-journal-text",
+  },
+  {
     title: "Alert",
     href: "/alerts",
     icon: "bi bi-bell",

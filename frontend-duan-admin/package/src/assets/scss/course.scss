@@ -1,0 +1,60 @@
+.course-cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-data {
+    width: 70%;
+}
+
+.box-delete {
+    border: 1px solid #ff2727;
+    padding: 8px;
+    cursor: pointer;
+    color: #ff2727;
+    border-radius: 5px;
+    opacity: .8;
+    transition: ease .3s;
+
+    .bi-archive {
+        margin-right: 5px;
+    }
+
+    &:hover {
+        background-color: #ff2727;
+        color: #fff;
+    }
+}
+
+.box-add {
+    border: 1px solid #276fff;
+    padding: 8px;
+    cursor: pointer;
+    color: #276fff;
+    border-radius: 5px;
+    opacity: .8;
+    transition: ease .3s;
+    margin-left: 10px;
+
+    .bi-plus-circle {
+        margin-right: 5px;
+    }
+
+    &:hover {
+        background-color: #276fff;
+        color: #fff;
+    }
+}
+
+.box-action {
+    display: flex;
+}
+
+.course-img {
+    padding-top: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border-radius: 5px;
+}

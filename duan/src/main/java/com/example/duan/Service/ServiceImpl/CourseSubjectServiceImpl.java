@@ -46,8 +46,17 @@ public class CourseSubjectServiceImpl implements CourseSubjectService {
     @Override
     public Set<CourseSubjectDTO> saveAll(Set<CourseSubjectDTO> courseSubjectDTOs) {
         courseSubjectDTOs.forEach(p -> {
-            if(courseSubjectRepository.findByCourse_IdAndSubject_Id(p.getCourse().getId(), p.getSubject().getId()).isPresent()) {
-                throw new ApiRequestException("Course Subject Already Exists");
+            CourseSubject courseSubject = courseSubjectRepository.findByCourse_IdAndSubject_Id(p.getCourse().getId(), p.getSubject().getId());
+            if(p.getId() == 0){
+                if(courseSubject != null) {
+                    throw new ApiRequestException("Course Subject Already Exists");
+                }
+            }else {
+                if(courseSubject != null) {
+                    if(courseSubject.getId() != p.getId()) {
+                        throw new ApiRequestException("Course Subject Already Exists");
+                    }
+                }
             }
         });
         Set<CourseSubject> courseSubjects = (Set<CourseSubject>) ModelMapperConfig.mapCollection(courseSubjectDTOs, CourseSubject.class, Collectors.toSet());
@@ -56,8 +65,11 @@ public class CourseSubjectServiceImpl implements CourseSubjectService {
     }
 
     @Override
-    public void deleteById(int id) {
-        CourseSubject courseSubject = courseSubjectRepository.findById(id).orElseThrow(() -> new ApiRequestException("Course Subject Not Found"));
-        courseSubjectRepository.delete(courseSubject);
+    public void deleteAll(Set<CourseSubjectDTO> courseSubjectDTOs) {
+        courseSubjectDTOs.forEach(p -> {
+            CourseSubject courseSubject = courseSubjectRepository.findById(p.getId()).orElseThrow(() -> new ApiRequestException("Course Subject Not Found"));
+        });
+        Set<CourseSubject> courseSubjects = (Set<CourseSubject>) ModelMapperConfig.mapCollection(courseSubjectDTOs, CourseSubject.class, Collectors.toSet());
+        courseSubjectRepository.deleteAll(courseSubjects);
     }
 }

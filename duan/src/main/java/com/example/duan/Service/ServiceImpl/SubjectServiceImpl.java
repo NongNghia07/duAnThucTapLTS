@@ -9,6 +9,9 @@ import com.example.duan.Service.SubjectDetailService;
 import com.example.duan.Service.SubjectService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +36,13 @@ public class SubjectServiceImpl implements SubjectService {
     public Set<SubjectDTO> getAll() {
         List<Subject> subjects = subjectRepository.findAll();
         return (Set<SubjectDTO>) ModelMapperConfig.mapCollection(subjects, SubjectDTO.class, Collectors.toSet());
+    }
+
+    @Override
+    public Page<SubjectDTO> getAll(Pageable pageable) {
+        Page<Subject> page = subjectRepository.findAll(pageable);
+        List<SubjectDTO> subjectDTOS = (List<SubjectDTO>) ModelMapperConfig.mapCollection(page.getContent(), SubjectDTO.class, Collectors.toList());
+        return new PageImpl<>(subjectDTOS, pageable, page.getTotalPages());
     }
 
     @Override
