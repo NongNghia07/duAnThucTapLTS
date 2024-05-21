@@ -8,12 +8,14 @@ import com.example.duan.Exception.ApiRequestException;
 import com.example.duan.Repository.CourseRepository;
 import com.example.duan.Service.CourseService;
 import com.example.duan.Service.CourseSubjectService;
+import com.example.duan.Service.FirebaseFileService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Random;
@@ -26,12 +28,14 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final ModelMapper modelMapper;
     private final CourseSubjectService courseSubjectService;
+    private final FirebaseFileService firebaseFileService;
 
     @Autowired
-    public CourseServiceImpl(CourseRepository courseRepository, ModelMapper modelMapper, CourseSubjectService courseSubjectService) {
+    public CourseServiceImpl(CourseRepository courseRepository, ModelMapper modelMapper, CourseSubjectService courseSubjectService, FirebaseFileService firebaseFileService) {
         this.courseRepository = courseRepository;
         this.modelMapper = modelMapper;
         this.courseSubjectService = courseSubjectService;
+        this.firebaseFileService = firebaseFileService;
     }
 
     @Override
@@ -48,7 +52,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDTO create(CourseDTO courseDTO) {
+    public CourseDTO create(CourseDTO courseDTO, MultipartFile file) {
         Course course = modelMapper.map(courseDTO, Course.class);
         if(courseRepository.findByCode(courseDTO.getCode()).isPresent()){
             throw new ApiRequestException("Course already exists");
@@ -59,8 +63,12 @@ public class CourseServiceImpl implements CourseService {
         course.setNumberOfStudent(0);
         course.setNumberOfPurchases(0);
 
+        // Lưu ảnh vào firebase, lấy ra đường dẫn downloadUrl của hỉnh ảnh đó
+        course.setImageCourse(firebaseFileService.save(file));
+
         // Lưu khóa học mới vào bảng `courses`
         courseRepository.save(course);
+
 
         // Lưu tất cả các môn học vào bảng `course_subjects` của khóa học vừa tạo
         saveCourseSubjects(course.getId(), courseDTO);
@@ -69,7 +77,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDTO update(CourseDTO courseDTO) {
+    public CourseDTO update(CourseDTO courseDTO, MultipartFile file) {
         // Tìm kiếm khóa học
         Course course = courseRepository.findById(courseDTO.getId()).orElseThrow(() -> new ApiRequestException("Course not found"));
 
@@ -80,8 +88,14 @@ public class CourseServiceImpl implements CourseService {
         course.setPrice(course.getPrice());
         course.setTotalCourseDuration(courseDTO.getTotalCourseDuration());
 
+        // kiểm tra hình ảnh khóa học có được cập nhật không
+        if(course.getImageCourse().equals(courseDTO.getImageCourse())){
+            course.setImageCourse(firebaseFileService.save(file));
+        }
+
         // Lưu khóa học
         courseRepository.save(course);
+
 
         // Lưu Môn học vào khóa học
         saveCourseSubjects(course.getId(), courseDTO);

@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/course")
@@ -32,13 +33,13 @@ public class CourseRestController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> create(@RequestBody CourseDTO courseDTO) {
-        return ResponseEntity.ok(courseService.create(courseDTO));
+    public ResponseEntity<?> create(@RequestPart("courseDTO") CourseDTO courseDTO, @RequestPart("file") MultipartFile file) {
+        return ResponseEntity.ok(courseService.create(courseDTO, file));
     }
 
     @PostMapping("update")
-    public ResponseEntity<?> update(@RequestBody CourseDTO courseDTO) {
-        return ResponseEntity.ok(courseService.update(courseDTO));
+    public ResponseEntity<?> update(@RequestPart("courseDTO") CourseDTO courseDTO, @RequestPart(name = "file") MultipartFile file) {
+        return ResponseEntity.ok(courseService.update(courseDTO, file));
     }
 
     @DeleteMapping("delete/{id}")

@@ -13,10 +13,12 @@ import makeAnimated from 'react-select/animated';
 
 import { useNavigate } from "react-router-dom";
 import UsePagination from "../../hooks/pagination";
+import noImg from "../../assets/images/no-img.jpg";
 import "../../assets/scss/course.scss"
 
 const Course = () => {
     const [course, setCourse] = useState({ courseSubjects: [] })
+    const [file, setFile] = useState()
     const [checkeds, setCheckeds] = useState([])
     const navigate = useNavigate();
     const [page, setPage] = useState(0)
@@ -66,7 +68,16 @@ const Course = () => {
 
 
     const createCourse = async () => {
-        await axios.post(`http://localhost:8080/api/v1/course/create`, course)
+        const formData = new FormData();
+        formData.append('courseDTO', new Blob([JSON.stringify(course)], { type: 'application/json' }));
+        formData.append('file', file); // Assuming 'file' is a File object
+        await axios.post(`http://localhost:8080/api/v1/course/create`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        getApiCourse()
+        closeModal()
     }
     // End Call api
 
@@ -135,7 +146,6 @@ const Course = () => {
             return
         }
         createCourse()
-        getApiCourse()
     };
 
     const handleSelect = (value) => {
@@ -157,6 +167,11 @@ const Course = () => {
     const closeModal = () => {
         setModalShow(false);
         setCourse({ courseSubjects: [] })
+        setFile()
+    }
+
+    const inputFile = () => {
+        document.getElementById("input-file").click()
     }
 
     return (
@@ -201,6 +216,7 @@ const Course = () => {
                                     <th>Đang học</th>
                                     <th>Đăng ký</th>
                                     <th>Thời gian</th>
+                                    <th>Ảnh</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -228,6 +244,9 @@ const Course = () => {
                                         </td>
                                         <td>
                                             {item.totalCourseDuration}
+                                        </td>
+                                        <td style={{ paddingLeft: 0, paddingRight: 0 }}>
+                                            <img className="course-item-img" src={item.imageCourse ? item.imageCourse : noImg} />
                                         </td>
                                         <td>
                                             <svg onClick={() => openDetail(item.id)} style={{ cursor: "pointer" }} xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#666666"><path d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-30.11 21-51.56Q186-817 216-816h346l-72 72H216v528h528v-274l72-72v346q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm264-336Zm-96 96v-153l354-354q11-11 24-16t26.5-5q14.4 0 27.45 5 13.05 5 23.99 15.78L891-840q11 11 16 24.18t5 26.82q0 13.66-5.02 26.87-5.02 13.2-15.98 24.13L537-384H384Zm456-405-51-51 51 51ZM456-456h51l231-231-25-26-26-25-231 231v51Zm257-257-26-25 26 25 25 26-25-26Z" /></svg>
@@ -323,7 +342,15 @@ const Course = () => {
                                 </Form.Group>
                             </Col>
                             <Col md="4">
-                                <div className="course-img" style={{ backgroundImage: `url(https://funix.edu.vn/wp-content/uploads/2021/08/tai-mien-phi-tai-lieu-ngon-ngu-lap-trinh-java-5.jpg)` }}></div>
+                                <input style={{
+                                    border: "1px solid",
+                                    width: "100%",
+                                    borderRadius: "5px",
+                                    display: 'none'
+                                }}
+                                    id="input-file"
+                                    onChange={(e) => setFile(e.target.files[0])} type="file" />
+                                <div className="course-img" onClick={() => inputFile()} style={{ backgroundImage: `url(${file ? URL.createObjectURL(file) : noImg})` }} />
                             </Col>
                         </Row>
                     </Form>
