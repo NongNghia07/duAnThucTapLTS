@@ -43,7 +43,7 @@ public class User implements Serializable {
     private LocalDate dateOfBirth;
 
     @Column(name = "is_active")
-    private boolean isActive = false;
+    private Boolean isActive = false;
 
     @Column(name = "address")
     private String address;
@@ -52,7 +52,7 @@ public class User implements Serializable {
     private Status userStatus;
 
     @Column(name = "is_locked")
-    private boolean isLocked = false;
+    private Boolean isLocked = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "district_id")

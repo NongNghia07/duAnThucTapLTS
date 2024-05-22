@@ -5,13 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-public class PermissionDTO {
+public class RoleDTO {
     private int id;
-    private UserDTO user;
-    private RoleDTO role;
+    private String roleName;
 }
-

@@ -1,10 +1,7 @@
 package com.example.duan.RestController;
 
 import com.example.duan.DTO.PermissionDTO;
-import com.example.duan.Entity.Permission;
-import com.example.duan.Entity.User;
-import com.example.duan.Repository.UserRepository;
-import com.example.duan.Service.Permission.PermissionService;
+import com.example.duan.Service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,43 +9,35 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/permission")
+@RequestMapping("/api/v1/permission")
 public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
-    @Autowired
-    private UserRepository userRepository;
 
     @GetMapping
-    public List<PermissionDTO> getAllPermissions() {
-        return permissionService.getAllPermissions();
+    public ResponseEntity<List<PermissionDTO>> getAllPermissions() {
+        return ResponseEntity.ok(permissionService.getAllPermissions());
     }
 
-    @GetMapping("/getPermission")
-    public Permission getPermissionById(@RequestParam int id) {
-        return permissionService.getPermissionById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<PermissionDTO> getPermissionById(@PathVariable int id) {
+        return ResponseEntity.ok(permissionService.getPermissionById(id));
     }
 
     @PostMapping
-    public Permission createPermission(@RequestBody Permission permission) {
-        return permissionService.createPermission(permission);
+    public ResponseEntity<List<PermissionDTO>> createPermission(@RequestBody List<PermissionDTO> permissionDTOs) {
+        return ResponseEntity.ok(permissionService.createPermission(permissionDTOs));
     }
 
-    @PutMapping("/{id}")
-    public Permission updatePermission(@PathVariable int id, @RequestBody Permission permissionDetails) {
-        return permissionService.updatePermission(id, permissionDetails);
-    }
-
-    @DeleteMapping("/deletePermission")
-    public void deletePermission(@RequestParam int id) {
+    @DeleteMapping
+    public ResponseEntity<Void> deletePermission(@RequestParam int id) {
         permissionService.deletePermission(id);
+        return ResponseEntity.ok().build();
     }
 
-
-
-    @PostMapping("/create")
-    public List<PermissionDTO> createAll (@RequestBody List<PermissionDTO> permissionDTOS){
-        return permissionService.createAll(permissionDTOS);
+    @PutMapping
+    public ResponseEntity<PermissionDTO> updatePermission(@RequestBody PermissionDTO permissionDTO) {
+        return ResponseEntity.ok(permissionService.updatePermission(permissionDTO));
     }
 }

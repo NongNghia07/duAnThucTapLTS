@@ -1,4 +1,10 @@
 package com.example.duan.DTO;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Set;
+
 //
 ////import jakarta.validation.constraints.NotBlank;
 //import lombok.AllArgsConstructor;
@@ -10,16 +16,16 @@ package com.example.duan.DTO;
 //
 //@NoArgsConstructor
 //@AllArgsConstructor
-//@Getter
-//@Setter
+@Getter
+@Setter
 public class UserDTO {
     private int id;
 
 ////    @NotBlank(message = "userName can't be null")
-//    private String userName;
+  private String userName;
 //    private String password;
 //
 //    private ProvinceDTO province;
 //
-//    private Set<PermissionDTO> permissions;
+  private Set<PermissionDTO> permissions;
 }

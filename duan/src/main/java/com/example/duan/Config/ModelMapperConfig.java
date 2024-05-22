@@ -29,10 +29,5 @@ public class ModelMapperConfig {
                 .collect(collector);
     }
 
-    public static <S, T> List<T> mapCollection(Collection<S> source, Class<T> targetClass) {
-        ModelMapper modelMapper = new ModelMapper();
-        return source.stream()
-                .map(element -> modelMapper.map(element, targetClass))
-                .collect(Collectors.toList());
-    }
+
 }
