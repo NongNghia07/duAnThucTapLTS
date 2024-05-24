@@ -8,6 +8,7 @@ import java.util.Set;
 public interface ProvinceService {
     Set<ProvinceDTO> findAll();
     Page<ProvinceDTO> findAllPageable(Pageable pageable);
+    ProvinceDTO create(ProvinceDTO provinceDTO);
     ProvinceDTO update(ProvinceDTO provinceDTO);
     void delete(int id);
     ProvinceDTO findById(int id);

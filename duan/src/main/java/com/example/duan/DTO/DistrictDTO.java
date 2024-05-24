@@ -16,6 +16,7 @@ public class DistrictDTO {
     private int id;
     @NotBlank(message = "Name can't not be null")
     private String name;
+    private ProvinceDTO province;
     private Set<WardDTO> wards;
     private Set<UserDTO> users;
 }

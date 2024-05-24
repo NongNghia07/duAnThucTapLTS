@@ -1,5 +1,6 @@
 package com.example.duan.RestController;
 
+import com.example.duan.DTO.DistrictDTO;
 import com.example.duan.DTO.ProvinceDTO;
 import com.example.duan.Service.ProvinceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ public class ProvinceRestController {
                                      @RequestParam(name = "size", defaultValue = "10") Integer size){
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(provinceService.findAllPageable(pageable));
+    }
+
+    @PostMapping("create")
+    public ResponseEntity<?> create(@RequestBody ProvinceDTO provinceDTO) {
+        return ResponseEntity.ok(provinceService.create(provinceDTO));
     }
 
     @PostMapping("update")

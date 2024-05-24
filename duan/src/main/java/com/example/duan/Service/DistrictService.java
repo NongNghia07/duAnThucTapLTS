@@ -10,6 +10,7 @@ public interface DistrictService {
     Set<DistrictDTO> findAll();
     Page<DistrictDTO> findAllPageable(Pageable pageable);
     DistrictDTO update(DistrictDTO districtDTO);
+    Set<DistrictDTO> saveAll(Set<DistrictDTO> districtDTOs);
     void delete(int id);
     DistrictDTO findById(int id);
 }
