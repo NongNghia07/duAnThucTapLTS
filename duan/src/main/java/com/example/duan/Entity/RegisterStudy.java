@@ -16,7 +16,7 @@ public class RegisterStudy {
     private int id;
 
     @Column(name = "is_finished")
-    private  boolean isFinished = false;
+    private boolean isFinished = false;
 
     @Column(name = "register_time")
     private LocalDateTime registerTime;
@@ -28,7 +28,7 @@ public class RegisterStudy {
     private LocalDateTime doneTime;
 
     @Column(name = "is_active")
-    private  boolean isActive = false;
+    private boolean isActive = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

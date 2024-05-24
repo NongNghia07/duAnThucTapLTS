@@ -2,26 +2,22 @@ package com.example.duan.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Table(name = "role")
+@Table
 @Data
-public class Role implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "role_code")
-    private String roleCode;
-
-    @Column(name = "role_name")
-    private String roleName;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
-    @JsonIgnore
-    private Set<Permission> permissions;
+    String roleName;
+    @ManyToMany(fetch = FetchType.EAGER)
+    Set<Permission> permissions;
 }

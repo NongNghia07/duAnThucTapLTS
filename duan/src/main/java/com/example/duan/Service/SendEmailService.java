@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 @RequiredArgsConstructor
 public class SendEmailService {
     private JavaMailSender mailSender;
+
     public void sendMail(MultiValueMap<String, Object> requestMap, MultipartFile[] multipartFiles) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
