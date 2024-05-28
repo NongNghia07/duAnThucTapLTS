@@ -54,7 +54,7 @@ public class FirebaseFileService {
 
             return getDownloadUrl(blobInfo.getBlobId());
         } catch (Exception e) {
-            return e.getMessage();
+            return null;
         }
     }
 

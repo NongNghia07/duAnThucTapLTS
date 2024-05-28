@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 import "../../assets/css/pagination.css"
 
@@ -37,10 +37,12 @@ export default function UsePagination(props) {
     }
 
     const handleClick = (page) => {
-        if (page == number - 1) return;
+        if (page === number - 1) return;
         if (page < 0 || page >= totalPages) return;
         setPage(page)
     }
+
+
 
     return (
         <>

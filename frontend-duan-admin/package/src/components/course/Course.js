@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { Card, CardTitle, Table, FormGroup, Label, Input } from "reactstrap";
+import { toast } from 'react-toastify';
 
 import Form from "react-bootstrap/Form";
 import Modal from 'react-bootstrap/Modal';
@@ -22,20 +23,21 @@ const Course = () => {
     const [checkeds, setCheckeds] = useState([])
     const navigate = useNavigate();
     const [page, setPage] = useState(0)
-    const [size, setSize] = useState(5)
+    const [size, setSize] = useState(7)
+    const [keyword, setKeyword] = useState('')
     const [isSort, setIsSort] = useState(false)
-    const [modalShow, setModalShow] = useState(false);
+    const [modalCreateShow, setModalCreateShow] = useState(false);
+    const [modalDeleteShow, setModalDeleteShow] = useState(false);
 
     const animatedComponents = makeAnimated();
 
     // call api 
-
     const [courses, setCourses] = useState()
     const [subjects, setSubjects] = useState()
 
-    const getApiCourse = useCallback(async () => {
+    const getApiCourse = useCallback(async (keyword) => {
         try {
-            const res = await axios.get(`http://localhost:8080/api/v1/course/getPage?page=${page}&&size=${size}`);
+            const res = await axios.get(`http://localhost:8080/api/v1/course/getPage?keyword=${keyword ? keyword : ''}&&page=${page}&&size=${size}`);
             const data = res.data ? res.data : []
             setCourses(data)
         } catch (e) {
@@ -57,10 +59,9 @@ const Course = () => {
         }
     }, [])
 
-
     useEffect(() => {
-        getApiCourse();
-    }, [getApiCourse])
+        getApiCourse(keyword);
+    }, [page, size])
 
     useEffect(() => {
         getApiSubject();
@@ -68,18 +69,41 @@ const Course = () => {
 
 
     const createCourse = async () => {
-        const formData = new FormData();
-        formData.append('courseDTO', new Blob([JSON.stringify(course)], { type: 'application/json' }));
-        formData.append('file', file); // Assuming 'file' is a File object
-        await axios.post(`http://localhost:8080/api/v1/course/create`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-        getApiCourse()
-        closeModal()
+        try {
+            const formData = new FormData();
+            formData.append('courseDTO', new Blob([JSON.stringify(course)], { type: 'application/json' }));
+            formData.append('file', file ? file : {}); // Assuming 'file' is a File object
+            await axios.post(`http://localhost:8080/api/v1/course/create`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            getApiCourse(keyword)
+            closeModalCreate()
+            toast.success("Thêm khóa học thành công");
+        } catch (error) {
+        }
     }
+
+
+    const deleteCourse = async (isStatus) => {
+        if (isStatus) {
+            const lst = [...checkeds]
+            await axios.post(`http://localhost:8080/api/v1/course/delete`, lst)
+            getApiCourse(keyword)
+            setModalDeleteShow(false)
+            toast.success("Xóa khóa học thành công");
+        }
+    }
+
     // End Call api
+
+    const handleSearch = (kw) => {
+        setKeyword(kw)
+        if (!kw) {
+            getApiCourse('')
+        }
+    }
 
     // chuyển đến trang chi tiết khóa học
     const openDetail = (id) => {
@@ -96,6 +120,12 @@ const Course = () => {
         } else {
             copy.splice(index, 1)
             setCheckeds([...copy])
+        }
+        if (copy.length === courses.content.length) {
+            document.getElementById("check-all").checked = true
+            return
+        } else {
+            document.getElementById("check-all").checked = false
         }
     }
 
@@ -164,8 +194,8 @@ const Course = () => {
         setCourse((prev) => ({ ...prev, [input]: value }))
     }
 
-    const closeModal = () => {
-        setModalShow(false);
+    const closeModalCreate = () => {
+        setModalCreateShow(false);
         setCourse({ courseSubjects: [] })
         setFile()
     }
@@ -173,6 +203,7 @@ const Course = () => {
     const inputFile = () => {
         document.getElementById("input-file").click()
     }
+
 
     return (
         <div>
@@ -184,17 +215,19 @@ const Course = () => {
                             placeholder="Search"
                             className="me-2"
                             aria-label="Search"
+                            value={keyword}
+                            onChange={(e) => handleSearch(e.target.value)}
                         />
-                        <Button variant="outline-success">Search</Button>
+                        <Button variant="outline-success" onClick={() => getApiCourse(keyword)}>Search</Button>
                     </Form>
                     <div className="box-action">
                         {checkeds.length > 0 &&
-                            <div className="box-delete">
+                            <div className="box-delete" onClick={() => setModalDeleteShow(true)}>
                                 <i className="bi bi-archive"></i>
                                 Xóa
                             </div>
                         }
-                        <div className="box-add" onClick={() => setModalShow(true)}>
+                        <div className="box-add" onClick={() => setModalCreateShow(true)}>
                             <i className="bi bi-plus-circle"></i>
                             Thêm
                         </div>
@@ -205,27 +238,33 @@ const Course = () => {
                         <Table className="no-wrap mt-3 align-middle" responsive borderless>
                             <thead>
                                 <tr>
-                                    <th>
+                                    <th colSpan={2}>
                                         <FormGroup check>
-                                            <Input type="checkbox" onChange={(e) => handleCheckedAll(e.target.checked)} /> <Label check>Code</Label>
+                                            <Input id="check-all" type="checkbox" onChange={(e) => handleCheckedAll(e.target.checked)} /> <Label check>All</Label>
                                         </FormGroup>
                                     </th>
+                                    <th>Code</th>
                                     <th>Tên</th>
                                     <th>Giới thiệu</th>
                                     <th onClick={() => sortData('price')}>Giá</th>
                                     <th>Đang học</th>
                                     <th>Đăng ký</th>
                                     <th>Thời gian</th>
-                                    <th>Ảnh</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {courses.content.map(item => (
                                     <tr key={item.id} className="border-top">
                                         <td>
-                                            <FormGroup check>
-                                                <Input type="checkbox" onChange={() => { handleChecked(item.id) }} checked={checkeds.includes(item.id)} /> <Label check>{item.code}</Label>
+                                            <FormGroup check className="check-item">
+                                                <Input type="checkbox" onChange={() => { handleChecked(item.id) }} checked={checkeds.includes(item.id)} />
+                                                <img className="course-item-img" src={item.imageCourse ? item.imageCourse : noImg} alt="" />
                                             </FormGroup>
+                                        </td>
+                                        <td style={{ paddingLeft: 0, paddingRight: 0 }}>
+                                        </td>
+                                        <td>
+                                            {item.code}
                                         </td>
                                         <td>
                                             {item.name}
@@ -245,9 +284,7 @@ const Course = () => {
                                         <td>
                                             {item.totalCourseDuration}
                                         </td>
-                                        <td style={{ paddingLeft: 0, paddingRight: 0 }}>
-                                            <img className="course-item-img" src={item.imageCourse ? item.imageCourse : noImg} />
-                                        </td>
+
                                         <td>
                                             <svg onClick={() => openDetail(item.id)} style={{ cursor: "pointer" }} xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#666666"><path d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-30.11 21-51.56Q186-817 216-816h346l-72 72H216v528h528v-274l72-72v346q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm264-336Zm-96 96v-153l354-354q11-11 24-16t26.5-5q14.4 0 27.45 5 13.05 5 23.99 15.78L891-840q11 11 16 24.18t5 26.82q0 13.66-5.02 26.87-5.02 13.2-15.98 24.13L537-384H384Zm456-405-51-51 51 51ZM456-456h51l231-231-25-26-26-25-231 231v51Zm257-257-26-25 26 25 25 26-25-26Z" /></svg>
                                         </td>
@@ -263,9 +300,13 @@ const Course = () => {
                     </>
                 }
             </Card>
+
+
+
+
             <Modal
-                show={modalShow}
-                onHide={() => closeModal()}
+                show={modalCreateShow}
+                onHide={() => closeModalCreate()}
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
@@ -356,8 +397,29 @@ const Course = () => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={() => handleCreate()}>Thêm</Button>
-                    <Button onClick={() => closeModal()}>Đóng</Button>
+                    <Button variant="outline-primary" onClick={() => handleCreate()}>Thêm</Button>
+                    <Button variant="outline-secondary" onClick={() => closeModalCreate()}>Đóng</Button>
+                </Modal.Footer>
+            </Modal>
+
+
+            <Modal
+                show={modalDeleteShow}
+                onHide={() => setModalDeleteShow(false)}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Xóa khóa học
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Bạn chắc chắn muốn xóa {checkeds?.length > 1 ? "những khóa học này?" : "khóa học này?"}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="outline-danger" onClick={() => deleteCourse(true)}>Xác nhận</Button>
+                    <Button variant="outline-secondary" onClick={() => setModalDeleteShow(false)}>Không</Button>
                 </Modal.Footer>
             </Modal>
         </div>

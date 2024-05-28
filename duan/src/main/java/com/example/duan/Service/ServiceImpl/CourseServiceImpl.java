@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,35 +46,46 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Page<CourseDTO> getAll(Pageable pageable) {
-        Page<Course> page = courseRepository.findAll(pageable);
-        List<CourseDTO> courseDTOS = (List<CourseDTO>) ModelMapperConfig.mapCollection(page.getContent(), CourseDTO.class, Collectors.toList());
-        return new PageImpl<>(courseDTOS, pageable, page.getTotalPages());
+    public Page<CourseDTO> getAll(String keyword, Pageable pageable) {
+        Page<Course> page = courseRepository.findByNameOrderByIdDesc(keyword, pageable);
+        Page<CourseDTO> pageCourseDTO = page.map(new Function<Course, CourseDTO>() {
+            @Override
+            public CourseDTO apply(Course c) {
+                CourseDTO courseDTOs = new CourseDTO();
+                courseDTOs = modelMapper.map(c, CourseDTO.class);
+                return courseDTOs;
+            }
+        });
+        return pageCourseDTO;
     }
 
     @Override
     public CourseDTO create(CourseDTO courseDTO, MultipartFile file) {
-        Course course = modelMapper.map(courseDTO, Course.class);
-        if(courseRepository.findByCode(courseDTO.getCode()).isPresent()){
-            throw new ApiRequestException("Course already exists");
+        try {
+            Course course = modelMapper.map(courseDTO, Course.class);
+            if(courseRepository.findByCode(courseDTO.getCode()).isPresent()){
+                throw new ApiRequestException("Course already exists");
+            }
+
+            // kiểm tra user tạo khóa học phải có quyền giảng viên thông qua chứng chỉ giảng viên ở bảng certificate
+            course.setCode(String.valueOf(randomCode()));
+            course.setNumberOfStudent(0);
+            course.setNumberOfPurchases(0);
+
+            // Lưu ảnh vào firebase, lấy ra đường dẫn downloadUrl của hỉnh ảnh đó
+            course.setImageCourse(firebaseFileService.save(file));
+
+            // Lưu khóa học mới vào bảng `courses`
+            courseRepository.save(course);
+
+
+            // Lưu tất cả các môn học vào bảng `course_subjects` của khóa học vừa tạo
+            saveCourseSubjects(course.getId(), courseDTO);
+
+            return modelMapper.map(course, CourseDTO.class);
+        } catch (Exception e) {
+            throw new ApiRequestException(e.getMessage());
         }
-
-        // kiểm tra user tạo khóa học phải có quyền giảng viên thông qua chứng chỉ giảng viên ở bảng certificate
-        course.setCode(String.valueOf(randomCode()));
-        course.setNumberOfStudent(0);
-        course.setNumberOfPurchases(0);
-
-        // Lưu ảnh vào firebase, lấy ra đường dẫn downloadUrl của hỉnh ảnh đó
-        course.setImageCourse(firebaseFileService.save(file));
-
-        // Lưu khóa học mới vào bảng `courses`
-        courseRepository.save(course);
-
-
-        // Lưu tất cả các môn học vào bảng `course_subjects` của khóa học vừa tạo
-        saveCourseSubjects(course.getId(), courseDTO);
-
-        return modelMapper.map(course, CourseDTO.class);
     }
 
     @Override
@@ -84,18 +96,16 @@ public class CourseServiceImpl implements CourseService {
         // Update các trường của khóa học
         course.setName(courseDTO.getName());
         course.setIntroduce(courseDTO.getIntroduce());
-        course.setImageCourse(courseDTO.getImageCourse());
         course.setPrice(course.getPrice());
         course.setTotalCourseDuration(courseDTO.getTotalCourseDuration());
 
         // kiểm tra hình ảnh khóa học có được cập nhật không
-        if(course.getImageCourse().equals(courseDTO.getImageCourse())){
+        if(file != null){
             course.setImageCourse(firebaseFileService.save(file));
         }
 
         // Lưu khóa học
         courseRepository.save(course);
-
 
         // Lưu Môn học vào khóa học
         saveCourseSubjects(course.getId(), courseDTO);
@@ -104,14 +114,20 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void delete(int id) {
-        Course course = courseRepository.findById(id).orElseThrow(() -> new ApiRequestException("Not found with id: " + id));
-        courseRepository.delete(course);
+    public void delete(List<Integer> lst) {
+        for (int i = 0; i < lst.size(); i++) {
+            Course course = courseRepository.findById(lst.get(i)).orElseThrow();
+            courseSubjectService.deleteAll(course.getId());
+            courseRepository.delete(course);
+        }
     }
 
     @Override
     public CourseDTO getById(int id) {
-        return modelMapper.map(courseRepository.findById(id).orElseThrow(() -> new ApiRequestException("Not found with id: " + id)), CourseDTO.class);
+        Course course = courseRepository.findById(id).orElseThrow(() -> new ApiRequestException("Not found with id: " + id));
+        CourseDTO courseDTO = modelMapper.map(course, CourseDTO.class);
+        courseDTO.setCourseSubjects(courseSubjectService.findAllByCourseId(course.getId()));
+        return courseDTO;
     }
 
     private int randomCode() {

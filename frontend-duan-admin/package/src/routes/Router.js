@@ -7,6 +7,7 @@ const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
 /***** Pages ****/
 const Subject = lazy(() => import("../components/subject/Subject.js"))
 const Course = lazy(() => import("../components/course/Course.js"))
+const CourseDetail = lazy(() => import("../components/course/CourseDetail.js"))
 
 const Starter = lazy(() => import("../views/Starter.js"));
 const About = lazy(() => import("../views/About.js"));
@@ -31,7 +32,7 @@ const ThemeRoutes = [
       { path: "/subject", exact: true, element: <Subject /> },
       { path: "/subject/:id", exact: true, element: <Course /> },
       { path: "/course", exact: true, element: <Course /> },
-      { path: "/course/:id", exact: true, element: <Subject /> },
+      { path: "/course/:id", exact: true, element: <CourseDetail /> },
 
       { path: "/starter", exact: true, element: <Starter /> },
       { path: "/about", exact: true, element: <About /> },

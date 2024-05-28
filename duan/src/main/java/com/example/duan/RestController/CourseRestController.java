@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/course")
 @CrossOrigin("*")
@@ -27,24 +29,25 @@ public class CourseRestController {
 
     @GetMapping("getPage")
     public ResponseEntity<?> getAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
-                                     @RequestParam(name = "size", defaultValue = "10") Integer size){
+                                     @RequestParam(name = "size", defaultValue = "7") Integer size,
+                                    @RequestParam(name = "keyword", defaultValue = "") String keyword){
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(courseService.getAll(pageable));
+        return ResponseEntity.ok(courseService.getAll(keyword, pageable));
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> create(@RequestPart("courseDTO") CourseDTO courseDTO, @RequestPart("file") MultipartFile file) {
+    public ResponseEntity<?> create(@RequestPart("courseDTO") CourseDTO courseDTO, @RequestPart(name = "file", required = false) MultipartFile file) {
         return ResponseEntity.ok(courseService.create(courseDTO, file));
     }
 
     @PostMapping("update")
-    public ResponseEntity<?> update(@RequestPart("courseDTO") CourseDTO courseDTO, @RequestPart(name = "file") MultipartFile file) {
+    public ResponseEntity<?> update(@RequestPart("courseDTO") CourseDTO courseDTO, @RequestPart(name = "file", required = false) MultipartFile file) {
         return ResponseEntity.ok(courseService.update(courseDTO, file));
     }
 
-    @DeleteMapping("delete/{id}")
-    public void delete(@PathVariable Integer id) {
-        courseService.delete(id);
+    @PostMapping("delete")
+    public void delete(@RequestBody List<Integer> lst) {
+        courseService.delete(lst);
     }
 
     @GetMapping("find/{id}")
