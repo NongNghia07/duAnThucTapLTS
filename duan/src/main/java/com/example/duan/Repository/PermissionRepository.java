@@ -10,6 +10,6 @@ import com.example.duan.Entity.User;
 
 
 @Repository
-public interface PermissionRepository extends JpaRepository<Permission,Integer> {
+public interface PermissionRepository extends JpaRepository<Permission,String> {
     Permission findByUserAndRole(User user, Role role);
 }

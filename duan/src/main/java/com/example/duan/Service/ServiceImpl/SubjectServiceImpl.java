@@ -1,7 +1,9 @@
 package com.example.duan.Service.ServiceImpl;
 
 import com.example.duan.Config.ModelMapperConfig;
+import com.example.duan.DTO.CourseDTO;
 import com.example.duan.DTO.SubjectDTO;
+import com.example.duan.Entity.Course;
 import com.example.duan.Entity.Subject;
 import com.example.duan.Exception.ApiRequestException;
 import com.example.duan.Repository.SubjectRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,8 +44,15 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Page<SubjectDTO> getAll(Pageable pageable) {
         Page<Subject> page = subjectRepository.findAll(pageable);
-        List<SubjectDTO> subjectDTOS = (List<SubjectDTO>) ModelMapperConfig.mapCollection(page.getContent(), SubjectDTO.class, Collectors.toList());
-        return new PageImpl<>(subjectDTOS, pageable, page.getTotalPages());
+        Page<SubjectDTO> pageDTO = page.map(new Function<Subject, SubjectDTO>() {
+            @Override
+            public SubjectDTO apply(Subject c) {
+                SubjectDTO subjectDTO = new SubjectDTO();
+                subjectDTO = modelMapper.map(c, SubjectDTO.class);
+                return subjectDTO;
+            }
+        });
+        return pageDTO;
     }
 
     @Override

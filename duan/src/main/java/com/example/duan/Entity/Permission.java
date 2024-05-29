@@ -26,4 +26,5 @@ public class Permission {
     @JoinColumn(name = "role_id")
     private Role role;
 
+    private String name;
 }
