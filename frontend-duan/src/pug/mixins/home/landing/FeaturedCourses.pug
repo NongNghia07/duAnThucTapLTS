@@ -1,0 +1,64 @@
+append variables
+  -
+    var courses= [
+      {
+        image:'design.png',
+        title :'Thiết kế hệ thống thông tin cho người mới bắt đầu',
+        text: 'The Museum of Modern Art',
+      },
+      {
+        image:'psychology.png',
+        title :'Phật giáo và tâm lý học',
+        text: 'The Museum of Modern Art',
+      },
+      {
+        image:'philosophy.png',
+        title :'Giới thiệu về triết học',
+        text: 'Duke University',
+      },
+      {
+        image:'photographs.png',
+        title :'Nâng cao khả năng phân tích ảnh',
+        text: 'Duke University',
+      },
+      {
+        image:'arguments.png',
+        title :'Làm sao để nhìn nhận vấn đề thực tiễn hơn',
+        text: 'The Museum of Modern Art',
+      },
+      {
+        image:'experience-design.png',
+        title :'Cách tạo thời gian biểu cho chính mình',
+        text: 'The Museum of Modern Art',
+      },
+      {
+        image:'user-research.png',
+        title :'Viết lách như bậc thầy văn học',
+        text: 'The Museum of Modern Art',
+      },
+      {
+        image:'critical-thinking.png',
+        title :'Introduction to Logic and Critical Thinking',
+        text: 'Duke University',
+      },
+      {
+        image:'art-design.png',
+        title :'Nghệ thuật và Thiết kế đồ họa',
+        text: 'The Museum of Modern Art',
+      },
+    ];
+
+        
+mixin FeaturedCourses 
+  +Section 
+    .row 
+      h1.text-center.mb-5  Các khóa học nổi bật hàng đầu
+      +Courses(courses[0])
+      +Courses(courses[1])
+      +Courses(courses[2])
+      +Courses(courses[3])
+      +Courses(courses[4])
+      +Courses(courses[5])
+      +Courses(courses[6])
+      +Courses(courses[7])
+      +Courses(courses[8])

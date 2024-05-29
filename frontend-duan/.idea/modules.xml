@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/frontend-duan.iml" filepath="$PROJECT_DIR$/.idea/frontend-duan.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/WebBanKhoaHoc.iml" filepath="$PROJECT_DIR$/.idea/WebBanKhoaHoc.iml" />
     </modules>
   </component>
 </project>

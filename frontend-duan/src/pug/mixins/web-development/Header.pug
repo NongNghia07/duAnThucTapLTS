@@ -1,0 +1,33 @@
+mixin DevelopmentHeader
+  +Section.pb-11.pt-7.bg-600
+    .row 
+      .col-12 
+        h6.font-sans-serif.text-primary.fw-bold Danh mục khóa học
+        h1.mb-6 Phát triển Website
+      
+        form.row.g-3
+          .col-sm-6.col-md-3
+            label.form-label(for='inputCategories') Danh mục
+            select.form-select#inputCategories
+              option(selected) Phát triển Web
+              option(value='1') Thiết kế UX/UI
+          .col-sm-6.col-md-3
+            label.form-label(for='inputLevel') Cấp bậc
+            select.form-select#inputLevel
+              option(selected) Tất cả
+              option(value='1') Cấp độ 1 
+              option(value='2') Cấp độ 2 
+              option(value='3') Cấp độ 3
+          .col-sm-6.col-md-3
+            label.form-label(for='inputLanguage') Ngôn ngữ
+            select.form-select#inputLanguage
+              option(selected) Vietnamese
+              option(value='1') English
+              option(value='2') Bangla
+              option(value='3') Hindi
+          .col-sm-6.col-md-3
+            label.form-label(for='inputInstructor') Giảng Viên
+            select.form-select#inputInstructor
+              option(selected) Tất cả giảng viên 
+          .col-auto.z-index-2
+            button.btn.btn-primary(type='submit') Tìm kiếm
