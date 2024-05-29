@@ -46,18 +46,44 @@ public class CourseSubjectServiceImpl implements CourseSubjectService {
     @Override
     public Set<CourseSubjectDTO> saveAll(Set<CourseSubjectDTO> courseSubjectDTOs) {
         courseSubjectDTOs.forEach(p -> {
-            if(courseSubjectRepository.findByCourse_IdAndSubject_Id(p.getCourse().getId(), p.getSubject().getId()).isPresent()) {
-                throw new ApiRequestException("Course Subject Already Exists");
+            CourseSubject courseSubject = courseSubjectRepository.findByCourse_IdAndSubject_Id(p.getCourse().getId(), p.getSubject().getId());
+            if(p.getId() == 0){
+                if(courseSubject != null) {
+                    throw new ApiRequestException("Course Subject Already Exists");
+                }
+            }else {
+                if(courseSubject != null) {
+                    if(courseSubject.getId() != p.getId()) {
+                        throw new ApiRequestException("Course Subject Already Exists");
+                    }
+                }
             }
         });
         Set<CourseSubject> courseSubjects = (Set<CourseSubject>) ModelMapperConfig.mapCollection(courseSubjectDTOs, CourseSubject.class, Collectors.toSet());
-        courseSubjectRepository.saveAll(courseSubjects);
+        List<CourseSubject> lst = courseSubjectRepository.saveAll(courseSubjects);
+
+        List<CourseSubject> old = courseSubjectRepository.findByCourse_Id(lst.get(0).getCourse().getId());
+
+        // lấy danh sách courseSubject cần xóa
+        // lấy tất cả courseSubject của course_id
+        // lấy ra những courseSubject không có trong danh sách courseSubject vừa được saveAll
+        List<CourseSubject> lstDelete = old.stream()
+                .filter(obj -> lst.stream().noneMatch(item -> item.getId() == obj.getId()))
+                .collect(Collectors.toList());
+
+        if(!lstDelete.isEmpty()) courseSubjectRepository.deleteAll(lstDelete);
+
         return courseSubjectDTOs;
     }
 
     @Override
-    public void deleteById(int id) {
-        CourseSubject courseSubject = courseSubjectRepository.findById(id).orElseThrow(() -> new ApiRequestException("Course Subject Not Found"));
-        courseSubjectRepository.delete(courseSubject);
+    public void deleteAll(Integer course_id) {
+        List<CourseSubject> courseSubjects = courseSubjectRepository.findByCourse_Id(course_id);
+        courseSubjectRepository.deleteAll(courseSubjects);
+    }
+
+    @Override
+    public Set<CourseSubjectDTO> findAllByCourseId(Integer course_id) {
+        return (Set<CourseSubjectDTO>) ModelMapperConfig.mapCollection(courseSubjectRepository.findByCourse_Id(course_id), CourseSubjectDTO.class, Collectors.toSet());
     }
 }
