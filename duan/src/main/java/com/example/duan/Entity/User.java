@@ -3,126 +3,144 @@ package com.example.duan.Entity;
 import com.example.duan.Enum.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "user")
 @Data
-public class User implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    int id;
 
-    @Column(name = "username")
-    private String userName;
+//    @Column(name = "username")
+    String userName;
 
     @Column(name = "create_time")
-    private LocalDateTime createTime;
+    @Temporal(TemporalType.DATE)
+    Date createTime;
+
+    @PrePersist
+    protected void onCreate() {
+        if (createTime == null) {
+            createTime = new Date();
+        }
+    }
 
     @Column(name = "avatar")
-    private String avatar;
+    String avatar;
 
     @Column(name = "email")
-    private String email;
+    String email;
 
     @Column(name = "update_time")
-    private LocalDateTime updateTime;
+    @Temporal(TemporalType.DATE)
+    Date updateTime;
 
-    @Column(name = "password")
-    private String password;
+//    @Column(name = "password")
+    String password;
 
     @Column(name = "full_name")
-    private String fullName;
+    String fullName;
 
     @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
+    Date dateOfBirth;
 
     @Column(name = "is_active")
-    private boolean isActive = false;
+    boolean isActive = false;
 
     @Column(name = "address")
-    private String address;
+    String address;
 
     @Enumerated(EnumType.STRING)
-    private Status userStatus;
+    Status userStatus;
 
     @Column(name = "is_locked")
-    private boolean isLocked = false;
+    boolean isLocked = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "district_id")
     @JsonIgnore
-    private District district;
+    District district;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "province_id")
     @JsonIgnore
-    private Province province;
+    Province province;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ward_id")
     @JsonIgnore
-    private Ward ward;
+    Ward ward;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "certificate_id")
     @JsonIgnore
-    private Certificate certificate;
+    Certificate certificate;
+
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+//    @JsonIgnore
+//    Set<Permission> permissions;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    Set<Role> roles;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    private Set<Permission> permissions;
+    Set<RefreshToken> refreshTokens;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    private Set<RefreshToken> refreshTokens;
+    Set<Answers> answers;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    private Set<Answers> answers;
+    Set<MakeQuestion> makeQuestions;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    private Set<MakeQuestion> makeQuestions;
+    Set<ConfirmEmail> confirmEmails;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    private Set<ConfirmEmail> confirmEmails;
+    Set<DoHomeWork> doHomeWorks;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    private Set<DoHomeWork> doHomeWorks;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @JsonIgnore
-    private Set<RegisterStudy> registerStudies;
+    Set<RegisterStudy> registerStudies;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "creator")
     @JsonIgnore
-    private Set<Blog> blogs;
+    Set<Blog> blogs;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    private Set<CommentBlog> commentBlogs;
+    Set<CommentBlog> commentBlogs;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    private Set<Notification> notifications;
+    Set<Notification> notifications;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    private Set<LearningProgress> learningProgress;
+    Set<LearningProgress> learningProgress;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    private Set<LikeBlog> likeBlogs;
+    Set<LikeBlog> likeBlogs;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    private Set<Bill> bills;
+    Set<Bill> bills;
 }

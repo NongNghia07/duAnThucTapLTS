@@ -2,7 +2,7 @@ import React from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 
 export default function UsePagination(props) {
-    const { number, totalPages, setPage } = props
+    const {number, totalPages, setPage} = props
     let pagesToShow = []
     // Tính toán các trang cần hiển thị
     number > 1 && number < totalPages ? pagesToShow = [number] : pagesToShow = []
@@ -47,19 +47,22 @@ export default function UsePagination(props) {
     return (
         <>
             {totalPages >= 2 &&
-                <Pagination>
-                    {/* <Pagination.First onClick={() => handleClick(0)} /> */}
-                    <Pagination.Prev onClick={() => handleClick(number - 2)} />
-                    <Pagination.Item onClick={() => handleClick(0)} active={number === 1}>{1}</Pagination.Item>
-                    {totalPages > 7 && number > 4 && <Pagination.Ellipsis />}
-                    {pagesToShow.map(page => (
-                        <Pagination.Item key={page} onClick={() => { handleClick(page - 1) }} active={page === number}>{page}</Pagination.Item>
-                    ))}
-                    {totalPages > 7 && number < totalPages - 3 && <Pagination.Ellipsis />}
-                    <Pagination.Item onClick={() => handleClick(totalPages - 1)} active={number === totalPages}>{totalPages}</Pagination.Item>
-                    <Pagination.Next onClick={() => handleClick(number)} />
-                    {/* <Pagination.Last onClick={() => handleClick(totalPages - 1)} /> */}
-                </Pagination>
+            <Pagination>
+                {/* <Pagination.First onClick={() => handleClick(0)} /> */}
+                <Pagination.Prev onClick={() => handleClick(number - 2)}/>
+                <Pagination.Item onClick={() => handleClick(0)} active={number === 1}>{1}</Pagination.Item>
+                {totalPages > 7 && number > 4 && <Pagination.Ellipsis/>}
+                {pagesToShow.map(page => (
+                    <Pagination.Item key={page} onClick={() => {
+                        handleClick(page - 1)
+                    }} active={page === number}>{page}</Pagination.Item>
+                ))}
+                {totalPages > 7 && number < totalPages - 3 && <Pagination.Ellipsis/>}
+                <Pagination.Item onClick={() => handleClick(totalPages - 1)}
+                                 active={number === totalPages}>{totalPages}</Pagination.Item>
+                <Pagination.Next onClick={() => handleClick(number)}/>
+                {/* <Pagination.Last onClick={() => handleClick(totalPages - 1)} /> */}
+            </Pagination>
             }
         </>
     );
