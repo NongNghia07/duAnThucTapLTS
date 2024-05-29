@@ -1,4 +1,5 @@
 package com.example.duan.DTO;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,10 +11,10 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProvinceDTO {
+public class WardDTO {
     private int id;
-    @NotBlank(message = "Name can't be null")
+    @NotBlank(message = "Name can't not be null")
     private String name;
-    private Set<DistrictDTO> districts;
+    private DistrictDTO district;
     private Set<UserDTO> users;
 }
