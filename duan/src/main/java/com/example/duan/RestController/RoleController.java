@@ -7,6 +7,10 @@ import com.example.duan.Service.RoleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import com.example.duan.DTO.RoleDTO;
+import com.example.duan.Service.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,3 +45,24 @@ public class RoleController {
 
 }
 
+
+    // @GetMapping("/{id}")
+    // public ResponseEntity<RoleDTO> getRoleById(@PathVariable int id) {
+    //     return ResponseEntity.ok(roleService.getRoleById(id));
+    // }
+
+    // @PostMapping
+    // public ResponseEntity<RoleDTO> createRole(@RequestBody RoleDTO roleDTO) {
+    //     return ResponseEntity.ok(roleService.createRole(roleDTO));
+    // }
+
+    // @DeleteMapping("/{id}")
+    // public ResponseEntity<Void> deleteRole(@PathVariable int id) {
+    //     roleService.deleteRole(id);
+    //     return ResponseEntity.ok().build();
+    // }
+
+    // @PutMapping
+    // public ResponseEntity<RoleDTO> updateRole(@RequestBody RoleDTO roleDTO) {
+    //     return ResponseEntity.ok(roleService.updateRole(roleDTO));
+    // }

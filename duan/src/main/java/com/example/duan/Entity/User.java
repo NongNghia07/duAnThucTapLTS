@@ -60,6 +60,7 @@ public class User{
     @Column(name = "is_active")
     boolean isActive = false;
 
+
     @Column(name = "address")
     String address;
 
@@ -68,6 +69,7 @@ public class User{
 
     @Column(name = "is_locked")
     boolean isLocked = false;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "district_id")
@@ -142,5 +144,5 @@ public class User{
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
-    Set<Bill> bills;
+    private Set<Bill> bills;
 }

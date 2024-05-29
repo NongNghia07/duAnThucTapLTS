@@ -35,3 +35,11 @@ public class PermissionService {
     }
 }
 
+
+    // List<PermissionDTO> getAllPermissions();
+    // PermissionDTO getPermissionById(int id);
+
+    // List<PermissionDTO> createPermission(List<PermissionDTO> permissionDTOs);
+
+    // void deletePermission(int id);
+    // PermissionDTO updatePermission(PermissionDTO permissionDTO);
