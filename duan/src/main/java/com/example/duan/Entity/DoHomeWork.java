@@ -47,4 +47,7 @@ public class DoHomeWork implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "doHomeWork")
     @JsonIgnore
     private Set<RunTestCase> runTestCases;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "doHomeWork")
+    private Grade grade;
 }

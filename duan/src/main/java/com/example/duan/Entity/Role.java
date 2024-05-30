@@ -17,7 +17,12 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Role {
     @Id
-    String roleName;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int id;
+
+    @Column(unique = true)
+    private String roleName;
+
     @ManyToMany(fetch = FetchType.EAGER)
-    Set<Permission> permissions;
+    private Set<Permission> permissions;
 }
