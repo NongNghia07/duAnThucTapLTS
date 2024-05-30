@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,15 +56,22 @@ public class SubjectServiceImpl implements SubjectService {
     public SubjectDTO save(SubjectDTO subjectDTO) {
         Subject subject = modelMapper.map(subjectDTO, Subject.class);
         subjectRepository.save(subject);
-        setSubjectDetail((int) subject.getId(), subjectDTO);
-        subjectDetailService.createAll(subjectDTO.getSubjectDetails());
+        if(subject.getSubjectDetails() != null){
+            setSubjectDetail((int) subject.getId(), subjectDTO);
+            subjectDetailService.createAll(subjectDTO.getSubjectDetails());
+        }
         return modelMapper.map(subject, SubjectDTO.class);
     }
 
     @Override
     public void deleteById(int id) {
-        Subject subject = subjectRepository.findById(id).orElseThrow(() -> new ApiRequestException("Subject not found"));
-        subjectRepository.delete(subject);
+        try {
+            Subject subject = subjectRepository.findById(id).orElseThrow(() -> new ApiRequestException("Subject not found"));
+            subjectDetailService.deleteById(subject.getId());
+            subjectRepository.delete(subject);
+        }catch (Exception e) {
+            throw new ApiRequestException(e.getMessage());
+        }
     }
 
     private SubjectDTO setSubjectDetail(int subject_id, SubjectDTO subjectDTO) {

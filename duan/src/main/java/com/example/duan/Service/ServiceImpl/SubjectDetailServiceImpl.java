@@ -54,4 +54,10 @@ public class SubjectDetailServiceImpl implements SubjectDetailService {
     public void deleteById(int id) {
 
     }
+
+    @Override
+    public void deteleAll(int subject_id) {
+        List<SubjectDetail> lst = subjectDetailRepository.findBySubject_Id(subject_id);
+        subjectDetailRepository.deleteAll(lst);
+    }
 }

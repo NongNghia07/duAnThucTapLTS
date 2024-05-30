@@ -32,8 +32,13 @@ public class SubjectRestController {
         return ResponseEntity.ok(subjectService.getAll(pageable));
     }
 
-    @PostMapping("craete")
-    public ResponseEntity<?> craete(@RequestBody SubjectDTO subjectDTO) {
+    @PostMapping("create")
+    public ResponseEntity<?> create(@RequestBody SubjectDTO subjectDTO) {
         return ResponseEntity.ok(subjectService.save(subjectDTO));
+    }
+
+    @PostMapping("delete/{id}")
+    public void deleteSubject(@PathVariable Integer id) {
+        subjectService.deleteById(id);
     }
 }

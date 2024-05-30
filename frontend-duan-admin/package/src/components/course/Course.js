@@ -244,12 +244,12 @@ const Course = () => {
                                         </FormGroup>
                                     </th>
                                     <th>Code</th>
-                                    <th>Tên</th>
+                                    <th onClick={() => sortData('name')}>Tên</th>
                                     <th>Giới thiệu</th>
                                     <th onClick={() => sortData('price')}>Giá</th>
-                                    <th>Đang học</th>
-                                    <th>Đăng ký</th>
-                                    <th>Thời gian</th>
+                                    <th onClick={() => sortData('numberOfStudent')}>Đang học</th>
+                                    <th onClick={() => sortData('numberOfPurchases')}>Đăng ký</th>
+                                    <th onClick={() => sortData('totalCourseDuration')}>Thời gian</th>
                                 </tr>
                             </thead>
                             <tbody>
