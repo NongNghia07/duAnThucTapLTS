@@ -10,4 +10,5 @@ public interface SubjectDetailService {
     Set<SubjectDetailDTO> createAll(Set<SubjectDetailDTO> subjectDetailDTO);
     SubjectDetailDTO update(SubjectDetailDTO subjectDetailDTO);
     void deleteById(int id);
+    void deteleAll(int subject_id);
 }
