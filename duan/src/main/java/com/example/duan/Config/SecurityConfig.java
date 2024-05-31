@@ -18,7 +18,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
     //    protected static final String SIGNER_KEY = "5f+h+PejWfWCZFwneTq4W5nzVt/x4oev3S0C9As/b4fRNs/DuO9G65OuoLsj3cy8";
-    private final String[] PUBLIC_ENDPOINTS = {"/users/create","/auth/login","/auth/introspect","/auth/logout","/auth/refresh"};
+    private final String[] PUBLIC_ENDPOINTS = {"/users/create","/auth/login","/auth/introspect","/auth/logout","/auth/refresh"
+    ,"/forgotpassword/verifymail","/forgotpassword/changepassword","/forgotpassword/verifyotp"
+    };
 
     private CustomJwtDecoder customJwtDecoder;
     @Bean
